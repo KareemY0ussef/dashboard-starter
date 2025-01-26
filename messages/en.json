@@ -1,0 +1,100 @@
+{
+  "localeSwitcher": {
+    "ar": "Arabic",
+    "en": "English"
+  },
+  "authentication": {
+    "login": {
+      "form": {
+        "title": "Sign In",
+        "description": "Please enter your credentials to access your account.",
+        "emailLabel": "Email Address",
+        "passwordLabel": "Password",
+        "submitButton": "Sign In"
+      },
+      "schema": {
+        "email": {
+          "string": "Email must be a valid string.",
+          "invalid": "Please enter a valid email address.",
+          "required": "Email is required."
+        },
+        "password": {
+          "string": "Password must be a valid string.",
+          "required": "Password is required.",
+          "min": "Password must be at least 8 characters long.",
+          "max": "Password must be no more than 32 characters long."
+        }
+      },
+      "errors": {
+        "unauthorized": {
+          "message": "Invalid Credentials",
+          "description": "The email or password you entered is incorrect."
+        },
+        "unexpected": {
+          "message": "Unexpected Error",
+          "description": "Please check your internet connection and try again."
+        }
+      }
+    },
+    "registration": {
+      "form": {
+        "title": "Create an Account",
+        "description": "Fill in your details below to create a new account.",
+        "usernameLabel": "Username",
+        "emailLabel": "Email Address",
+        "passwordLabel": "Password",
+        "confirmPasswordLabel": "Confirm Password",
+        "submitButton": "Sign Up"
+      },
+      "schema": {
+        "username": {
+          "string": "Username must be a valid string.",
+          "required": "Username is required.",
+          "min": "Username must be at least 3 characters long.",
+          "max": "Username must be no more than 32 characters long."
+        },
+        "email": {
+          "string": "Email must be a valid string.",
+          "invalid": "Please enter a valid email address.",
+          "required": "Email is required."
+        },
+        "password": {
+          "string": "Password must be a valid string.",
+          "required": "Password is required.",
+          "min": "Password must be at least 8 characters long.",
+          "max": "Password must be no more than 32 characters long."
+        },
+        "passwordConfirmation": {
+          "string": "Password confirmation must be a valid string.",
+          "required": "Password confirmation is required.",
+          "min": "Password confirmation must be at least 8 characters long.",
+          "max": "Password confirmation must be no more than 32 characters long.",
+          "match": "Passwords do not match."
+        }
+      },
+      "errors": {
+        "creationFailed": {
+          "message": "Account Creation Failed",
+          "description": "Please try again or contact support for assistance."
+        },
+        "unexpected": {
+          "message": "Unexpected Error",
+          "description": "Please check your internet connection and try again."
+        }
+      }
+    }
+  },
+  "dashboard": {
+    "pages": {
+      "home": "Home",
+      "admins": "Admins",
+      "media": "Media"
+    },
+    "media": {
+      "title": "Media",
+      "new": {
+        "title": "Add new media"
+      }
+    }
+  }
+}
