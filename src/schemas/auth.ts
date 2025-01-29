@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const loginSchema = (t: (key: string) => string) => {
+export const signInSchema = (t: (key: string) => string) => {
   return z.object({
     email: z
       .string({ message: t("schema.email.string") })
@@ -17,9 +17,9 @@ export const loginSchema = (t: (key: string) => string) => {
   });
 };
 
-export type loginSchemaType = z.infer<ReturnType<typeof loginSchema>>;
+export type signInSchemaType = z.infer<ReturnType<typeof signInSchema>>;
 
-export const newUserSchema = (t: (key: string) => string) => {
+export const signUpSchema = (t: (key: string) => string) => {
   return z
     .object({
       username: z
@@ -72,4 +72,4 @@ export const newUserSchema = (t: (key: string) => string) => {
     );
 };
 
-export type newUserSchemaType = z.infer<ReturnType<typeof newUserSchema>>;
+export type signUpSchemaType = z.infer<ReturnType<typeof signUpSchema>>;

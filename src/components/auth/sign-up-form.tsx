@@ -1,6 +1,7 @@
 "use client";
-import * as React from "react";
 
+import { signUp } from "@/actions/auth";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,16 +17,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { catchErrorTypedAsync } from "@/lib/utils";
+import { signUpSchema, signUpSchemaType } from "@/schemas/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader } from "lucide-react";
-import { newUserSchema, newUserSchemaType } from "../schemas";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { authClient } from "../auth-client";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function NewUserForm() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -36,8 +37,8 @@ export default function NewUserForm() {
 
   const [loading, setLoading] = React.useState(false);
 
-  const form = useForm<newUserSchemaType>({
-    resolver: zodResolver(newUserSchema(t)),
+  const form = useForm<signUpSchemaType>({
+    resolver: zodResolver(signUpSchema(t)),
     defaultValues: {
       username: "",
       email: "",
@@ -46,32 +47,29 @@ export default function NewUserForm() {
     },
   });
 
-  async function onSubmit(values: newUserSchemaType) {
-    try {
-      setLoading(true);
-
-      const { error } = await authClient.signUp.email({
-        name: values.username,
-        email: values.email,
-        password: values.password,
-      });
-
-      if (error) {
-        setLoading(false);
-        toast.error(t("errors.creationFailed.message"), {
-          description: t("errors.creationFailed.description"),
-        });
-      } else {
-        router.push("/");
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-
+  async function onSubmit(inputs: signUpSchemaType) {
+    setLoading(true);
+    const [unexpectedSignUpError, signUpResponse] = await catchErrorTypedAsync(
+      signUp(inputs),
+    );
+    if (unexpectedSignUpError) {
       toast.error(t("errors.unexpected.message"), {
         description: t("errors.unexpected.description"),
       });
+      setLoading(false);
+      return;
     }
+
+    const { error: signUpError } = signUpResponse;
+    if (signUpError) {
+      toast.error(signUpError.message, {
+        description: signUpError.description,
+      });
+      setLoading(false);
+      return;
+    }
+
+    router.push("/");
   }
 
   return (
@@ -94,7 +92,7 @@ export default function NewUserForm() {
                   <FormItem>
                     <FormLabel>{t("form.usernameLabel")}</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field} />
+                      <Input type="text" {...field} disabled={loading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -107,7 +105,7 @@ export default function NewUserForm() {
                   <FormItem>
                     <FormLabel>{t("form.emailLabel")}</FormLabel>
                     <FormControl>
-                      <Input type="email" {...field} />
+                      <Input type="email" {...field} disabled={loading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -124,6 +122,7 @@ export default function NewUserForm() {
                         <Input
                           type={showPassword ? "text" : "password"}
                           {...field}
+                          disabled={loading}
                         />
                         <Button
                           size={"icon"}
@@ -131,6 +130,7 @@ export default function NewUserForm() {
                           className="shrink-0"
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
+                          disabled={loading}
                         >
                           {showPassword ? (
                             <EyeOff className="size-5" />
@@ -155,6 +155,7 @@ export default function NewUserForm() {
                         <Input
                           type={showPasswordConfirmation ? "text" : "password"}
                           {...field}
+                          disabled={loading}
                         />
                         <Button
                           size={"icon"}
@@ -163,9 +164,10 @@ export default function NewUserForm() {
                           type="button"
                           onClick={() =>
                             setShowPasswordConfirmation(
-                              !showPasswordConfirmation
+                              !showPasswordConfirmation,
                             )
                           }
+                          disabled={loading}
                         >
                           {showPasswordConfirmation ? (
                             <EyeOff className="size-5" />

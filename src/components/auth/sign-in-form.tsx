@@ -1,6 +1,7 @@
 "use client";
-import * as React from "react";
 
+import { signIn } from "@/actions/auth";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,53 +17,53 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { loginSchema, loginSchemaType } from "../schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { catchErrorTypedAsync } from "@/lib/utils";
+import { signInSchema, signInSchemaType } from "@/schemas/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader } from "lucide-react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { authClient } from "../auth-client";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-export default function LoginForm() {
+export default function SignInForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
-  const t = useTranslations("authentication.login");
+  const t = useTranslations("auth.signIn");
 
-  const form = useForm<loginSchemaType>({
-    resolver: zodResolver(loginSchema(t)),
+  const form = useForm<signInSchemaType>({
+    resolver: zodResolver(signInSchema(t)),
     defaultValues: { email: "", password: "" },
   });
 
-  async function onSubmit(values: loginSchemaType) {
-    try {
-      setLoading(true);
+  async function onSubmit(inputs: signInSchemaType) {
+    setLoading(true);
 
-      const { error } = await authClient.signIn.email({
-        email: values.email,
-        password: values.password,
-      });
+    const [unexpectedSignInError, signInResponse] = await catchErrorTypedAsync(
+      signIn(inputs),
+    );
 
-      if (error) {
-        setLoading(false);
-        toast.error(t("errors.unauthorized.message"), {
-          description: t("errors.unauthorized.description"),
-        });
-      } else {
-        router.push("/");
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-
+    if (unexpectedSignInError) {
       toast.error(t("errors.unexpected.message"), {
         description: t("errors.unexpected.description"),
       });
+      setLoading(false);
+      return;
     }
+
+    const { error: signInError } = signInResponse;
+    if (signInError) {
+      toast.error(signInError.message, {
+        description: signInError.description,
+      });
+      setLoading(false);
+      return;
+    }
+
+    router.push("/");
   }
 
   return (
@@ -85,7 +86,7 @@ export default function LoginForm() {
                   <FormItem>
                     <FormLabel>{t("form.emailLabel")}</FormLabel>
                     <FormControl>
-                      <Input type="email" {...field} />
+                      <Input type="email" {...field} disabled={loading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -102,6 +103,7 @@ export default function LoginForm() {
                         <Input
                           type={showPassword ? "text" : "password"}
                           {...field}
+                          disabled={loading}
                         />
                         <Button
                           size={"icon"}
@@ -109,6 +111,7 @@ export default function LoginForm() {
                           className="shrink-0"
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
+                          disabled={loading}
                         >
                           {showPassword ? (
                             <EyeOff className="size-5" />

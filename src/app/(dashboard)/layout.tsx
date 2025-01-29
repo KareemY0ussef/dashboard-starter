@@ -1,13 +1,12 @@
-import { auth } from "@/auth";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import DashboardBreadcrumb from "@/components/layout/dashboard-breadcrumb";
-
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 

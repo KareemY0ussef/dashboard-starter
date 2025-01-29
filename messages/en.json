@@ -3,8 +3,8 @@
     "ar": "Arabic",
     "en": "English"
   },
-  "authentication": {
-    "login": {
+  "auth": {
+    "signIn": {
       "form": {
         "title": "Sign In",
         "description": "Please enter your credentials to access your account.",
@@ -36,7 +36,7 @@
         }
       }
     },
-    "registration": {
+    "signUp": {
       "form": {
         "title": "Create an Account",
         "description": "Fill in your details below to create a new account.",
@@ -82,6 +82,14 @@
           "description": "Please check your internet connection and try again."
         }
       }
+    },
+    "signOut": {
+      "errors": {
+        "unexpected": {
+          "message": "Unexpected Error",
+          "description": "Please check your internet connection and try again."
+        }
+      }
     }
   },
   "dashboard": {
@@ -92,9 +100,21 @@
     },
     "media": {
       "title": "Media",
+      "newButton": "Add new media",
       "new": {
-        "title": "Add new media"
+        "title": "Add new media",
+        "saveButton": "Save"
       }
+    }
+  },
+  "storage": {
+    "inputMessage": "<strong>Drag and drop here</strong> or select files",
+    "maxSizeMessage": "max file size is {size}",
+    "fileValues": {
+      "name": "Name",
+      "type": "Type",
+      "size": "Size",
+      "alt": "Alternative Text"
     }
   }
 }

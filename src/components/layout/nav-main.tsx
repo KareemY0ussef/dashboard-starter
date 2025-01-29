@@ -1,7 +1,3 @@
-"use client";
-
-import { ChevronRight, type LucideIcon } from "lucide-react";
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,6 +13,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 export function NavMain({
@@ -48,7 +45,7 @@ export function NavMain({
               {item.items?.length ? (
                 <>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
+                    <SidebarMenuAction className="data-[state=open]:rotate-90 ltr:rotate-0 rtl:rotate-180">
                       <ChevronRight />
                       <span className="sr-only">Toggle</span>
                     </SidebarMenuAction>

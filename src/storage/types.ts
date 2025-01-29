@@ -1,1 +1,5 @@
-export type ExtendedFileType = File & { uniqueId: string; preview: string };
+export type ExtendedFileType = File & {
+  uniqueId: string;
+  preview: string;
+  alt: string;
+};

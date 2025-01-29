@@ -20,9 +20,10 @@ export const config = {
           icon: Shield,
         },
         {
-          title: t("dashboard.pages.media"),
+          title: t("dashboard.media.title"),
           url: "/media",
           icon: Image,
+          items: [{ title: t("dashboard.media.new.title"), url: "/media/new" }],
         },
       ],
     };

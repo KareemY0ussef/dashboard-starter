@@ -1,5 +1,5 @@
-import ThemeButton from "@/components/theme-button";
-import LocaleSwitcher from "@/i18n/components/locale-switcher";
+import LocaleSwitcher from "@/components/i18n/locale-switcher";
+import ThemeButton from "@/components/theme/theme-button";
 import { getLocale } from "next-intl/server";
 
 export default async function AuthLayout({

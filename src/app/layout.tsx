@@ -1,11 +1,12 @@
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
-import { Rubik } from "next/font/google";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { Rubik } from "next/font/google";
 import { getLangDir } from "rtl-detect";
+
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 
 const rubik = Rubik({ subsets: ["latin", "arabic"], variable: "--font-rubik" });
 

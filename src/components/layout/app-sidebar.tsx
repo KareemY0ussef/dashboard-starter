@@ -1,8 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { Command } from "lucide-react";
-
 import { NavMain } from "@/components/layout/nav-main";
 import { NavUser } from "@/components/layout/nav-user";
 import {
@@ -14,11 +11,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useLocale, useTranslations } from "next-intl";
-import { getLangDir } from "rtl-detect";
-import ThemeButton from "../theme-button";
-import LocaleSwitcher from "@/i18n/components/locale-switcher";
 import { config } from "@/dashboard.config";
+import { Command } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import * as React from "react";
+import { getLangDir } from "rtl-detect";
+
+import LocaleSwitcher from "../i18n/locale-switcher";
+import ThemeButton from "../theme/theme-button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const t = useTranslations();
@@ -35,10 +35,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
-                </div>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -48,14 +44,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <div className="w-full flex gap-2">
+        <div className="flex w-full gap-2">
           <ThemeButton
             variant={"outline"}
-            className="bg-transparent shrink-0"
+            className="shrink-0 bg-transparent"
           />
           <LocaleSwitcher
             variant={"outline"}
-            className="bg-transparent w-full"
+            className="w-full bg-transparent"
           />
         </div>
         <NavUser user={data.user} />

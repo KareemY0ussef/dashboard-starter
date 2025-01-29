@@ -27,22 +27,29 @@ export default function DashboardBreadcrumb() {
     <Breadcrumb>
       <BreadcrumbList>
         {paths
-          .map((item, index) => {
+          .map((_, index) => {
             const url = paths.slice(0, index + 1).join("");
             const navItem = sidebarItems.navMain.find(
-              (item) => item.url === (url === "" ? "/" : url)
+              (item) =>
+                item.url === (url === "" ? "/" : url) ||
+                (item.items &&
+                  item.items.find((subItem) => subItem.url === url))
             );
             if (!navItem) return null;
+            const { title: currentTitle, url: currentURL } =
+              navItem.url === url
+                ? navItem
+                : navItem.items!.find((subItem) => subItem.url === url)!;
             return (
               <BreadcrumbItem
                 key={`dashboard-breadcrumb-item-${index}`}
                 className={index === paths.length - 1 ? "" : "hidden md:block"}
               >
                 {index === paths.length - 1 ? (
-                  <BreadcrumbPage>{navItem.title}</BreadcrumbPage>
+                  <BreadcrumbPage>{currentTitle}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link href={navItem.url}>{navItem.title}</Link>
+                    <Link href={currentURL}>{currentTitle}</Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
@@ -53,7 +60,7 @@ export default function DashboardBreadcrumb() {
             <>
               {prev}
               <BreadcrumbSeparator
-                className="hidden md:block"
+                className="hidden md:block ltr:rotate-0 rtl:rotate-180"
                 key={`separator-${index}`}
               />
               {curr}

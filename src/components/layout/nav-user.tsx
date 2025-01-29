@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  Loader,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
-
+import { signOut } from "@/actions/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -26,9 +17,19 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import React from "react";
-import { authClient } from "@/auth/auth-client";
+import { catchErrorTypedAsync } from "@/lib/utils";
+import {
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  CreditCard,
+  Loader,
+  LogOut,
+  Sparkles,
+} from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { toast } from "sonner";
 
 export function NavUser({
@@ -43,27 +44,32 @@ export function NavUser({
   const [logOutLoading, setLogOutLoading] = React.useState(false);
   const { isMobile } = useSidebar();
   const router = useRouter();
+  const signOutT = useTranslations("auth.signOut");
 
   async function handleLogOut() {
-    try {
-      setLogOutLoading(true);
-      const { error } = await authClient.signOut();
-      if (error) {
-        setLogOutLoading(false);
-        toast.error("", {
-          description: "An error occurred while logging out.",
-        });
-      } else {
-        router.push("/auth");
-      }
-    } catch (error) {
-      console.error(error);
-      setLogOutLoading(false);
+    setLogOutLoading(true);
 
-      toast.error("errors.unexpected.message", {
-        description: "errors.unexpected.description",
+    const [unexpectedSignOutError, signOutResponse] =
+      await catchErrorTypedAsync(signOut());
+
+    if (unexpectedSignOutError) {
+      toast.error(signOutT("errors.unexpected.message"), {
+        description: signOutT("errors.unexpected.description"),
       });
+      setLogOutLoading(false);
+      return;
     }
+
+    const { error: signOutError } = signOutResponse;
+    if (signOutError) {
+      toast.error(signOutError.message, {
+        description: signOutError.description,
+      });
+      setLogOutLoading(false);
+      return;
+    }
+
+    router.push("/auth");
   }
 
   return (
@@ -76,7 +82,6 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -95,7 +100,6 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
